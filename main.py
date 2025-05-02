@@ -14,10 +14,19 @@ class CustomerManager:
         else:
             self.customers[name] = purchases
 
-    def add_purchase(self, name, purchase):
-        self.add_customer(name, [purchase])
-
-    def add_purchases(self, name, purchases):
+    def add_purchase(self, name, purchase_or_purchases):
+        """
+        Add one or more purchases for a customer.
+        
+        Args:
+            name: The customer name
+            purchase_or_purchases: Either a single purchase dict or a list of purchase dicts
+        """
+        if isinstance(purchase_or_purchases, list):
+            purchases = purchase_or_purchases
+        else:
+            purchases = [purchase_or_purchases]
+            
         self.add_customer(name, purchases)
 
     def calculate_total_with_tax(self, purchases):

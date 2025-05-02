@@ -18,7 +18,7 @@ class TestCustomerManager(unittest.TestCase):
             cm.customers
         )
 
-    def test_add_purchase(self):
+    def test_add_purchase_single(self):
         cm = CustomerManager()
         name = "Alice"
         purchase = {'price': 50, 'item': 'banana'}
@@ -38,6 +38,17 @@ class TestCustomerManager(unittest.TestCase):
 
         self.assertEqual(
             {name: [purchase, purchase]},
+            cm.customers
+        )
+        
+    def test_add_purchase_list(self):
+        cm = CustomerManager()
+        name = "Alice"
+        purchases = [{'price': 50, 'item': 'banana'}, {'price': 80, 'item': 'apple'}]
+        cm.add_purchase(name, purchases)
+
+        self.assertEqual(
+            {name: purchases},
             cm.customers
         )
 
@@ -105,7 +116,7 @@ class TestCustomerManager(unittest.TestCase):
             {'weight': 25},
             {'weight': 30}
         ]
-        assert sc.calculate_shipping_fee(heavy_items) == 50
+        assert sc.calculate_shipping_fee(multiple_heavy_items) == 50
 
         # Test with empty purchase list
         assert sc.calculate_shipping_fee([]) == 20
@@ -116,17 +127,6 @@ class TestCustomerManager(unittest.TestCase):
             {'name': 'item'}
         ]
         assert sc.calculate_shipping_fee(no_weight_items) == 20
-        
-    def test_add_purchases(self):
-        cm = CustomerManager()
-        name = "Alice"
-        purchases = [{'price': 50, 'item': 'banana'}, {'price': 80, 'item': 'apple'}]
-        cm.add_purchases(name, purchases)
-
-        self.assertEqual(
-            {name: purchases},
-            cm.customers
-        )
 
 if __name__ == "__main__":
     unittest.main()
