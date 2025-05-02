@@ -133,7 +133,8 @@ class TestCustomerManager(unittest.TestCase):
         cm.add_customer("Bob", [{'price': 600}])  # Above discount threshold
         cm.add_customer("Charlie", [{'price': 350}])  # Potential future discount
         cm.add_customer("Dave", [{'price': 150}])  # Above tax threshold
-
+        cm.add_customer("Eve", [{'price': 2000}]) #VIP
+        cm.add_customer("Frank", [{'price': 800}]) #priority 
         
         captured_output = io.StringIO()
         with contextlib.redirect_stdout(captured_output):
@@ -146,10 +147,13 @@ class TestCustomerManager(unittest.TestCase):
         self.assertIn("Bob", output)
         self.assertIn("Dave", output)
         self.assertIn("Charlie", output)
+        self.assertIn("Eve", output)
+        self.assertIn("Frank", output)
 
         # Test discount eligibility messages
         self.assertIn("Eligible for discount", output)  # Bob's case
         self.assertIn("Potential future discount customer", output)  # Charlie's case
-
+        self.assertIn("VIP Customer!", output)
+        self.assertIn("Priority Customer", output)
 if __name__ == "__main__":
     unittest.main()
