@@ -124,6 +124,29 @@ class TestCustomerManager(unittest.TestCase):
             {name: purchases},
             cm.customers
         )
+    def test_generate_report(self):
+        cm = CustomerManager()
+        cm.add_customer("Alice", [{'price': 50}, {'price': 80}])  # Below discount threshold
+        cm.add_customer("Bob", [{'price': 600}])  # Above discount threshold
+        cm.add_customer("Charlie", [{'price': 350}])  # Potential future discount
+        cm.add_customer("Dave", [{'price': 150}])  # Above tax threshold
+
+        
+        captured_output = io.StringIO()
+        with contextlib.redirect_stdout(captured_output):
+            cm.generate_report()
+        
+        output = captured_output.getvalue()
+        
+        # Test output contains customer names
+        self.assertIn("Alice", output)
+        self.assertIn("Bob", output)
+        self.assertIn("Dave", output)
+        self.assertIn("Charlie", output)
+
+        # Test discount eligibility messages
+        self.assertIn("Eligible for discount", output)  # Bob's case
+        self.assertIn("Potential future discount customer", output)  # Charlie's case
 
 if __name__ == "__main__":
     unittest.main()
